@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+
+# Secrets — JANGAN pernah commit file ini
+.env.local
+.env*.local
+
+# Python
+venv/
+hti-demo-venv/
+__pycache__/
+*.pyc
+
+# OS/editor junk
+.DS_Store
+*.log

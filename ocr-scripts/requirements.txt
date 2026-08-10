@@ -1,0 +1,2 @@
+llama-cloud>=1.0
+mindee>=5.1
