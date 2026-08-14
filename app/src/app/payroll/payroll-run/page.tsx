@@ -1,0 +1,130 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { Card } from "@/components/ui/Card";
+import { karyawanList, hitungPayroll, formatRupiah, HasilPayroll } from "@/lib/payrollData";
+import { Play, CheckCircle2, Download, Loader2 } from "lucide-react";
+
+export default function PayrollRunPage() {
+  const [stage, setStage] = useState<"idle" | "processing" | "review" | "final">("idle");
+  const [hasil, setHasil] = useState<HasilPayroll[]>([]);
+
+  function jalankanPayroll() {
+    setStage("processing");
+    setTimeout(() => {
+      const jamLemburMock: Record<string, number> = { EMP003: 3 };
+      const result = karyawanList.map((k) => hitungPayroll(k, jamLemburMock[k.id] ?? 0));
+      setHasil(result);
+      setStage("review");
+    }, 1400);
+  }
+
+  const totalBersih = hasil.reduce((a, b) => a + b.gajiBersih, 0);
+
+  return (
+    <main className="min-h-screen bg-neutral-950 px-6 py-10 text-neutral-100 md:px-12">
+      <div className="mx-auto max-w-5xl">
+        <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-300">&larr; Kembali</Link>
+        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Payroll Engine</p>
+        <h1 className="mt-1 text-3xl font-bold">Hitung gaji sekali klik.</h1>
+        <p className="mt-2 max-w-2xl text-neutral-400">
+          Gaji pokok + lembur + BPJS + PPh 21 dihitung otomatis. Ditinjau dulu sebelum difinalisasi.
+        </p>
+
+        {stage === "idle" && (
+          <Card className="mt-8 flex flex-col items-center py-12 text-center">
+            <p className="mb-4 text-sm text-neutral-400">Periode: Agustus 2026 · {karyawanList.length} karyawan</p>
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={jalankanPayroll}
+              className="flex items-center gap-2 rounded-lg bg-blue-700 px-6 py-3 text-sm font-medium text-white hover:bg-blue-600"
+            >
+              <Play className="h-4 w-4" /> Jalankan Payroll
+            </motion.button>
+          </Card>
+        )}
+
+        {stage === "processing" && (
+          <Card className="mt-8 flex flex-col items-center py-12 text-center">
+            <Loader2 className="mb-3 h-8 w-8 animate-spin text-blue-500" />
+            <p className="text-sm text-neutral-400">Menghitung gaji, lembur, BPJS, dan PPh 21...</p>
+          </Card>
+        )}
+
+        <AnimatePresence>
+          {(stage === "review" || stage === "final") && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8">
+              <Card>
+                <div className="mb-4 flex items-center justify-between">
+                  <p className="text-sm font-medium text-neutral-300">
+                    {stage === "review" ? "Tinjau Sebelum Finalisasi" : "Payroll Difinalisasi"}
+                  </p>
+                  {stage === "final" && (
+                    <span className="flex items-center gap-1 text-xs text-emerald-400">
+                      <CheckCircle2 className="h-3.5 w-3.5" /> Slip gaji tersedia
+                    </span>
+                  )}
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-neutral-800 text-neutral-500">
+                        <th className="pb-2 pr-4 font-medium">Karyawan</th>
+                        <th className="pb-2 pr-4 font-medium">Bruto</th>
+                        <th className="pb-2 pr-4 font-medium">BPJS</th>
+                        <th className="pb-2 pr-4 font-medium">PPh 21</th>
+                        <th className="pb-2 pr-4 font-medium">Gaji Bersih</th>
+                        {stage === "final" && <th className="pb-2 font-medium">Slip</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {hasil.map((h) => (
+                        <tr key={h.karyawanId} className="border-b border-neutral-900">
+                          <td className="py-2 pr-4 text-neutral-300">{h.nama}</td>
+                          <td className="py-2 pr-4 text-neutral-300">{formatRupiah(h.penghasilanBruto)}</td>
+                          <td className="py-2 pr-4 text-neutral-400">{formatRupiah(h.totalPotonganBPJS)}</td>
+                          <td className="py-2 pr-4 text-neutral-400">{formatRupiah(h.pph21)}</td>
+                          <td className="py-2 pr-4 font-medium text-white">{formatRupiah(h.gajiBersih)}</td>
+                          {stage === "final" && (
+                            <td className="py-2">
+                              <button className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300">
+                                <Download className="h-3.5 w-3.5" /> PDF
+                              </button>
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colSpan={4} className="pt-3 text-right text-sm text-neutral-400">Total dibayarkan</td>
+                        <td className="pt-3 text-sm font-semibold text-white">{formatRupiah(totalBersih)}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                {stage === "review" && (
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setStage("final")}
+                    className="mt-5 flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-600"
+                  >
+                    <CheckCircle2 className="h-4 w-4" /> Finalisasi Payroll
+                  </motion.button>
+                )}
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p className="mt-6 text-xs text-neutral-600">
+          Perhitungan PPh 21 (skema TER) dan BPJS pada demo ini disederhanakan untuk ilustrasi —
+          verifikasi ulang ke aturan resmi terbaru sebelum dipakai payroll riil.
+        </p>
+      </div>
+    </main>
+  );
+}
