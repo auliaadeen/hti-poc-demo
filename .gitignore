@@ -18,3 +18,7 @@ __pycache__/
 # OS/editor junk
 .DS_Store
 *.log
+
+*.md
+*.zip
+
