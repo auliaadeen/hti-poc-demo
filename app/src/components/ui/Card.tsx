@@ -24,16 +24,30 @@ export function KpiCard({
   label,
   value,
   sub,
+  delta,
+  deltaPositive = true,
 }: {
   label: string;
   value: string;
   sub?: string;
+  delta?: string;
+  deltaPositive?: boolean;
 }) {
   return (
     <Card>
       <p className="text-sm text-neutral-400">{label}</p>
       <div className="mt-2 flex items-end gap-2">
         <span className="text-2xl font-semibold text-white">{value}</span>
+        {delta && (
+          <span
+            className={cn(
+              "mb-0.5 text-xs font-medium",
+              deltaPositive ? "text-emerald-400" : "text-red-400"
+            )}
+          >
+            {delta}
+          </span>
+        )}
       </div>
       {sub && <p className="mt-1 text-xs text-neutral-500">{sub}</p>}
     </Card>
