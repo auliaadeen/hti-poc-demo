@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ActivityFeed } from "@/components/ActivityFeed";
+import { AccountBadge } from "@/components/AccountBadge";
 
 const demos = [
   {
@@ -27,6 +28,7 @@ export default function Home() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-white dark:bg-neutral-950 px-6 text-neutral-900 dark:text-neutral-100">
       <div className="absolute right-4 top-4 flex items-center gap-2 md:right-6 md:top-6">
+        <AccountBadge />
         <ActivityFeed />
         <ThemeToggle />
       </div>
