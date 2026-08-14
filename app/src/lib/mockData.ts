@@ -27,12 +27,35 @@ export const mockWarehouseStock = [
   { gudang: "Surabaya - Gudang C", inbound: 890, outbound: 760, stok: 5280 },
 ];
 
+// Per-gudang breakdown so the dashboard bar chart can cross-filter by
+// warehouse. Summed across gudang per hari, these roughly reproduce the
+// combined weekly trend previously hardcoded here.
 export const mockWeeklyTrend = [
-  { hari: "Sen", masuk: 210, keluar: 180 },
-  { hari: "Sel", masuk: 260, keluar: 190 },
-  { hari: "Rab", masuk: 190, keluar: 220 },
-  { hari: "Kam", masuk: 300, keluar: 250 },
-  { hari: "Jum", masuk: 240, keluar: 210 },
-  { hari: "Sab", masuk: 120, keluar: 100 },
-  { hari: "Min", masuk: 60, keluar: 50 },
+  { hari: "Sen", gudang: "Cikarang - Gudang A", masuk: 95, keluar: 80 },
+  { hari: "Sen", gudang: "Cikarang - Gudang B (BMW)", masuk: 47, keluar: 40 },
+  { hari: "Sen", gudang: "Surabaya - Gudang C", masuk: 68, keluar: 60 },
+
+  { hari: "Sel", gudang: "Cikarang - Gudang A", masuk: 118, keluar: 82 },
+  { hari: "Sel", gudang: "Cikarang - Gudang B (BMW)", masuk: 58, keluar: 45 },
+  { hari: "Sel", gudang: "Surabaya - Gudang C", masuk: 84, keluar: 63 },
+
+  { hari: "Rab", gudang: "Cikarang - Gudang A", masuk: 86, keluar: 96 },
+  { hari: "Rab", gudang: "Cikarang - Gudang B (BMW)", masuk: 42, keluar: 52 },
+  { hari: "Rab", gudang: "Surabaya - Gudang C", masuk: 62, keluar: 72 },
+
+  { hari: "Kam", gudang: "Cikarang - Gudang A", masuk: 136, keluar: 108 },
+  { hari: "Kam", gudang: "Cikarang - Gudang B (BMW)", masuk: 67, keluar: 59 },
+  { hari: "Kam", gudang: "Surabaya - Gudang C", masuk: 97, keluar: 83 },
+
+  { hari: "Jum", gudang: "Cikarang - Gudang A", masuk: 109, keluar: 91 },
+  { hari: "Jum", gudang: "Cikarang - Gudang B (BMW)", masuk: 53, keluar: 50 },
+  { hari: "Jum", gudang: "Surabaya - Gudang C", masuk: 78, keluar: 69 },
+
+  { hari: "Sab", gudang: "Cikarang - Gudang A", masuk: 54, keluar: 43 },
+  { hari: "Sab", gudang: "Cikarang - Gudang B (BMW)", masuk: 27, keluar: 24 },
+  { hari: "Sab", gudang: "Surabaya - Gudang C", masuk: 39, keluar: 33 },
+
+  { hari: "Min", gudang: "Cikarang - Gudang A", masuk: 27, keluar: 22 },
+  { hari: "Min", gudang: "Cikarang - Gudang B (BMW)", masuk: 13, keluar: 12 },
+  { hari: "Min", gudang: "Surabaya - Gudang C", masuk: 20, keluar: 16 },
 ];
