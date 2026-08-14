@@ -135,3 +135,39 @@ export function hitungPayroll(k: Karyawan, jamLembur = 0): HasilPayroll {
 export function formatRupiah(n: number): string {
   return "Rp " + n.toLocaleString("id-ID");
 }
+
+// --- Masking untuk mode demo "Tampilkan Data Lengkap" OFF ---
+// Bukan access control sungguhan — cuma sensor tampilan di sisi client.
+
+function maskWordKeepFirstLast(word: string): string {
+  if (word.length <= 2) return word;
+  return word[0] + "*".repeat(word.length - 2) + word[word.length - 1];
+}
+
+function maskWordFirstOnly(word: string): string {
+  if (word.length <= 1) return word;
+  return word[0] + "*".repeat(word.length - 1);
+}
+
+// "Deen" -> "D**n", "Franky Jonly" -> "F****y J****"
+// (kata pertama sisakan huruf pertama+terakhir, kata berikutnya cuma huruf pertama)
+export function maskNama(nama: string): string {
+  const words = nama.trim().split(/\s+/);
+  if (words.length === 1) return maskWordKeepFirstLast(words[0]);
+  return [maskWordKeepFirstLast(words[0]), ...words.slice(1).map(maskWordFirstOnly)].join(" ");
+}
+
+// "Rp 12.000.000" -> "Rp 12.XXX.XXX" (sisakan 2 digit pertama nominal, sisanya "X")
+export function maskRupiah(formatted: string): string {
+  let digitsSeen = 0;
+  let out = "";
+  for (const ch of formatted) {
+    if (/\d/.test(ch)) {
+      digitsSeen += 1;
+      out += digitsSeen <= 2 ? ch : "X";
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}

@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, KpiCard, Badge } from "@/components/ui/Card";
-import { karyawanList, absensiHariIni, pengajuanCutiList, hitungPayroll, formatRupiah } from "@/lib/payrollData";
+import { karyawanList, absensiHariIni, pengajuanCutiList, hitungPayroll, formatRupiah, maskRupiah } from "@/lib/payrollData";
 
 export default function DashboardPage() {
+  const [tampilkanLengkap, setTampilkanLengkap] = useState(false);
+
   const totalBiayaSDM = karyawanList.reduce((a, k) => a + hitungPayroll(k).gajiBersih, 0);
   const hadirHariIni = absensiHariIni.filter((a) => a.checkIn).length;
   const cutiPending = pengajuanCutiList.filter((c) => c.status.startsWith("Menunggu")).length;
@@ -22,13 +26,26 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-neutral-950 px-6 py-10 text-neutral-100 md:px-12">
       <div className="mx-auto max-w-6xl">
         <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-300">&larr; Kembali</Link>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-3">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Dashboard</p>
-          <h1 className="mt-1 text-3xl font-bold">Ringkas untuk HR & Direksi.</h1>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-3 flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Dashboard</p>
+            <h1 className="mt-1 text-3xl font-bold">Ringkas untuk HR & Direksi.</h1>
+          </div>
+          <button
+            onClick={() => setTampilkanLengkap((v) => !v)}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-300 hover:border-neutral-500 hover:text-white"
+          >
+            {tampilkanLengkap ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+            Tampilkan Data Lengkap
+          </button>
         </motion.div>
 
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <KpiCard label="Total Biaya SDM (bulan ini)" value={formatRupiah(totalBiayaSDM)} sub="Estimasi gaji bersih seluruh karyawan" />
+          <KpiCard
+            label="Total Biaya SDM (bulan ini)"
+            value={tampilkanLengkap ? formatRupiah(totalBiayaSDM) : maskRupiah(formatRupiah(totalBiayaSDM))}
+            sub="Estimasi gaji bersih seluruh karyawan"
+          />
           <KpiCard label="Hadir Hari Ini" value={`${hadirHariIni} / ${karyawanList.length}`} sub="Berdasarkan absensi online" />
           <KpiCard label="Cuti/Izin Menunggu" value={String(cutiPending)} sub="Butuh tindak lanjut approval" />
         </div>
