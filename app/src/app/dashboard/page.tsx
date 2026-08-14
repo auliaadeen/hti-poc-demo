@@ -14,6 +14,7 @@ import {
 import { Card, KpiCard } from "@/components/ui/Card";
 import { mockWarehouseStock, mockWeeklyTrend } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -48,11 +49,14 @@ export default function DashboardPage() {
   }, [selectedWarehouse]);
 
   return (
-    <main className="min-h-screen bg-neutral-950 px-6 py-10 text-neutral-100 md:px-12">
+    <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-6xl">
-        <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-300">
-          &larr; Kembali
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
+            &larr; Kembali
+          </Link>
+          <ThemeToggle />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -65,7 +69,7 @@ export default function DashboardPage() {
           <h1 className="mt-1 text-3xl font-bold">
             Stok tiga gudang di satu layar.
           </h1>
-          <p className="mt-2 max-w-2xl text-neutral-400">
+          <p className="mt-2 max-w-2xl text-neutral-600 dark:text-neutral-400">
             Data di bawah ini adalah data contoh (mock) untuk demo PoC — begitu
             terhubung ke WMS asli, layout ini langsung diisi data real-time.
           </p>
@@ -103,7 +107,7 @@ export default function DashboardPage() {
         >
           <Card className="lg:col-span-2">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm font-medium text-neutral-300">
+              <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Barang Masuk vs Keluar — 7 Hari Terakhir
                 {selectedWarehouse && (
                   <span className="ml-2 text-neutral-500">· {selectedWarehouse}</span>
@@ -112,7 +116,7 @@ export default function DashboardPage() {
               {selectedWarehouse && (
                 <button
                   onClick={() => setSelectedWarehouse(null)}
-                  className="rounded-full border border-neutral-700 px-3 py-1 text-xs text-neutral-300 hover:border-neutral-500 hover:text-white"
+                  className="rounded-full border border-neutral-300 dark:border-neutral-700 px-3 py-1 text-xs text-neutral-700 dark:text-neutral-300 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-white"
                 >
                   Lihat Semua Gudang
                 </button>
@@ -148,7 +152,7 @@ export default function DashboardPage() {
           </Card>
 
           <Card>
-            <p className="mb-4 text-sm font-medium text-neutral-300">Per Gudang</p>
+            <p className="mb-4 text-sm font-medium text-neutral-700 dark:text-neutral-300">Per Gudang</p>
             <div className="space-y-4">
               {mockWarehouseStock.map((g) => {
                 const active = g.gudang === selectedWarehouse;
@@ -159,19 +163,19 @@ export default function DashboardPage() {
                     className={cn(
                       "w-full rounded-lg border px-3 py-2 text-left transition-colors",
                       active
-                        ? "border-red-600 bg-red-950/40"
-                        : "border-transparent hover:border-neutral-700 hover:bg-neutral-900"
+                        ? "border-red-600 bg-red-50 dark:bg-red-950/40"
+                        : "border-transparent hover:border-neutral-300 dark:hover:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900"
                     )}
                   >
                     <div className="flex items-center justify-between text-sm">
-                      <span className={active ? "text-red-200" : "text-neutral-300"}>
+                      <span className={active ? "text-red-700 dark:text-red-200" : "text-neutral-700 dark:text-neutral-300"}>
                         {g.gudang}
                       </span>
-                      <span className="font-medium text-white">
+                      <span className="font-medium text-neutral-900 dark:text-white">
                         {g.stok.toLocaleString("id-ID")}
                       </span>
                     </div>
-                    <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-800">
+                    <div className="mt-1 h-1.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
                       <div
                         className="h-1.5 rounded-full bg-red-600"
                         style={{ width: `${(g.stok / totalStok) * 100}%` }}

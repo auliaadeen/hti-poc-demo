@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import { UploadCloud, FileText, CheckCircle2, Loader2 } from "lucide-react";
 
@@ -39,18 +40,21 @@ export default function DocumentAiPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 px-6 py-10 text-neutral-100 md:px-12">
+    <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-5xl">
-        <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-300">
-          &larr; Kembali
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
+            &larr; Kembali
+          </Link>
+          <ThemeToggle />
+        </div>
         <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-red-500">
           Document AI — Demo
         </p>
         <h1 className="mt-1 text-3xl font-bold">
           Dari PDF ke data terstruktur, dalam hitungan detik.
         </h1>
-        <p className="mt-2 max-w-2xl text-neutral-400">
+        <p className="mt-2 max-w-2xl text-neutral-600 dark:text-neutral-400">
           Upload contoh invoice/PO/packing list — sistem membaca dokumennya dan
           menyusun field-field kunci secara otomatis. Manusia tetap yang
           menyetujui sebelum data masuk ERP.
@@ -69,12 +73,12 @@ export default function DocumentAiPage() {
                   className="flex flex-col items-center"
                 >
                   <UploadCloud className="mb-4 h-10 w-10 text-neutral-500" />
-                  <p className="mb-4 text-sm text-neutral-400">
+                  <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
                     Drag & drop dokumen, atau klik tombol di bawah
                   </p>
                   <button
                     onClick={() => inputRef.current?.click()}
-                    className="rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-red-600"
+                    className="rounded-lg bg-red-700 px-5 py-2.5 text-sm font-medium text-neutral-900 dark:text-white transition hover:bg-red-600"
                   >
                     Pilih Dokumen
                   </button>
@@ -82,7 +86,7 @@ export default function DocumentAiPage() {
                     onClick={() =>
                       handleFile(new File([""], "sample-invoice-hti.pdf", { type: "application/pdf" }))
                     }
-                    className="mt-3 text-xs text-neutral-500 underline hover:text-neutral-300"
+                    className="mt-3 text-xs text-neutral-500 underline hover:text-neutral-700 dark:hover:text-neutral-300"
                   >
                     atau coba dengan dokumen contoh
                   </button>
@@ -105,7 +109,7 @@ export default function DocumentAiPage() {
                   className="flex flex-col items-center"
                 >
                   <Loader2 className="mb-4 h-10 w-10 animate-spin text-red-500" />
-                  <p className="text-sm text-neutral-300">Membaca {fileName}…</p>
+                  <p className="text-sm text-neutral-700 dark:text-neutral-300">Membaca {fileName}…</p>
                   <p className="mt-1 text-xs text-neutral-500">
                     OCR &amp; ekstraksi field berjalan
                   </p>
@@ -120,13 +124,13 @@ export default function DocumentAiPage() {
                   className="flex flex-col items-center"
                 >
                   <CheckCircle2 className="mb-4 h-10 w-10 text-emerald-500" />
-                  <p className="text-sm text-neutral-300">{fileName}</p>
+                  <p className="text-sm text-neutral-700 dark:text-neutral-300">{fileName}</p>
                   <p className="mt-1 text-xs text-neutral-500">
                     Selesai diproses ({result?.source ?? "mock"})
                   </p>
                   <button
                     onClick={reset}
-                    className="mt-4 text-xs text-neutral-500 underline hover:text-neutral-300"
+                    className="mt-4 text-xs text-neutral-500 underline hover:text-neutral-700 dark:hover:text-neutral-300"
                   >
                     Coba dokumen lain
                   </button>
@@ -137,7 +141,7 @@ export default function DocumentAiPage() {
 
           {/* Result panel */}
           <Card>
-            <p className="mb-4 flex items-center gap-2 text-sm font-medium text-neutral-300">
+            <p className="mb-4 flex items-center gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
               <FileText className="h-4 w-4" /> Hasil Ekstraksi
             </p>
             {!result && (
@@ -155,10 +159,10 @@ export default function DocumentAiPage() {
                 {result.fields?.map((f: any) => (
                   <div
                     key={f.label}
-                    className="flex items-center justify-between border-b border-neutral-800 py-1.5 text-sm"
+                    className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 py-1.5 text-sm"
                   >
                     <span className="text-neutral-500">{f.label}</span>
-                    <span className="font-medium text-neutral-200">{f.value}</span>
+                    <span className="font-medium text-neutral-800 dark:text-neutral-200">{f.value}</span>
                   </div>
                 ))}
               </motion.div>
@@ -174,11 +178,11 @@ export default function DocumentAiPage() {
             className="mt-6"
           >
             <Card>
-              <p className="mb-4 text-sm font-medium text-neutral-300">Line Items</p>
+              <p className="mb-4 text-sm font-medium text-neutral-700 dark:text-neutral-300">Line Items</p>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-neutral-800 text-neutral-500">
+                    <tr className="border-b border-neutral-200 dark:border-neutral-800 text-neutral-500">
                       <th className="pb-2 pr-4 font-medium">SKU</th>
                       <th className="pb-2 pr-4 font-medium">Deskripsi</th>
                       <th className="pb-2 pr-4 font-medium">Qty</th>
@@ -188,12 +192,12 @@ export default function DocumentAiPage() {
                   </thead>
                   <tbody>
                     {result.lineItems.map((li: any) => (
-                      <tr key={li.sku} className="border-b border-neutral-900">
-                        <td className="py-2 pr-4 text-neutral-300">{li.sku}</td>
-                        <td className="py-2 pr-4 text-neutral-300">{li.desc}</td>
-                        <td className="py-2 pr-4 text-neutral-300">{li.qty}</td>
-                        <td className="py-2 pr-4 text-neutral-300">{li.unit}</td>
-                        <td className="py-2 text-neutral-200">{li.total}</td>
+                      <tr key={li.sku} className="border-b border-neutral-100 dark:border-neutral-900">
+                        <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.sku}</td>
+                        <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.desc}</td>
+                        <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.qty}</td>
+                        <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.unit}</td>
+                        <td className="py-2 text-neutral-800 dark:text-neutral-200">{li.total}</td>
                       </tr>
                     ))}
                   </tbody>
