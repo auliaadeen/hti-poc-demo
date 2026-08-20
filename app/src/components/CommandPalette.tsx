@@ -12,6 +12,7 @@ const AKSI_CEPAT = [
   { label: "Jalankan Payroll", href: "/payroll/payroll-run" },
   { label: "Upload Dokumen", href: "/document-ai" },
   { label: "Absen (Portal ESS)", href: "/payroll/ess" },
+  { label: "Tanya AI Assistant", href: "/assistant" },
 ];
 
 const HALAMAN = [
@@ -34,6 +35,7 @@ const HALAMAN = [
   { label: "KPI Dashboard", href: "/kpi" },
   { label: "Risk Register", href: "/risks" },
   { label: "Mini Slack", href: "/chat" },
+  { label: "AI Assistant", href: "/assistant" },
   { label: "Menu Klasik", href: "/menu" },
 ];
 

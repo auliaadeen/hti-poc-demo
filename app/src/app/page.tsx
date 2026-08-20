@@ -6,6 +6,7 @@ import {
   Package,
   Wallet,
   Mail,
+  Sparkles,
   LayoutGrid,
   ArrowRight,
   CheckCircle2,
@@ -18,16 +19,15 @@ import { AccountBadge } from "@/components/AccountBadge";
 import { Card, KpiCard } from "@/components/ui/Card";
 import { MiniSlackChannelView } from "@/components/MiniSlackChannelView";
 import { useMiniSlack } from "@/lib/MiniSlackContext";
-import { mockWarehouseStock } from "@/lib/mockData";
+import { computeDashboardStats } from "@/lib/dashboardStats";
 import { systemStatusList, type SystemStatus } from "@/lib/systemStatus";
-
-const STOK_KRITIS_AMBANG = 3500;
 
 const modules = [
   { href: "/document-ai", title: "Document AI", desc: "OCR & ekstraksi field otomatis dari PDF", icon: FileText },
   { href: "/dashboard", title: "Warehouse Visibility", desc: "Stok tiga gudang dalam satu layar", icon: Package },
   { href: "/payroll", title: "Payroll Visibility", desc: "Absensi, cuti, payroll engine", icon: Wallet },
   { href: "/email-setup", title: "Email Setup Dashboard", desc: "Cloudflare + Gmail + Brevo, free-tier", icon: Mail },
+  { href: "/assistant", title: "AI Assistant", desc: "Tanya kondisi semua modul, jawab natural language", icon: Sparkles },
 ];
 
 const toneFor: Record<SystemStatus, "success" | "danger" | "warning"> = {
@@ -44,13 +44,8 @@ const iconFor: Record<SystemStatus, typeof CheckCircle2> = {
 
 export default function CommandCenter() {
   const { messages } = useMiniSlack();
-
-  const dokumenDiproses = messages.filter((m) => m.channelSlug === "document-ai").length;
-  const payrollDifinalisasi = messages.some(
-    (m) => m.channelSlug === "payroll" && m.content.includes("difinalisasi")
-  );
-  const emailSetupEvents = messages.filter((m) => m.channelSlug === "email-setup").length;
-  const gudangKritis = mockWarehouseStock.filter((g) => g.stok < STOK_KRITIS_AMBANG).length;
+  const { dokumenDiproses, payrollDifinalisasi, emailSetupEvents, gudangKritis, totalGudang } =
+    computeDashboardStats(messages);
 
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
@@ -85,7 +80,7 @@ export default function CommandCenter() {
             sub="Periode berjalan"
           />
           <KpiCard label="Request Email Setup" value={String(emailSetupEvents)} sub="Event tercatat sesi ini" />
-          <KpiCard label="Gudang Stok Kritis" value={`${gudangKritis} dari ${mockWarehouseStock.length}`} sub="Di bawah ambang batas" />
+          <KpiCard label="Gudang Stok Kritis" value={`${gudangKritis} dari ${totalGudang}`} sub="Di bawah ambang batas" />
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
