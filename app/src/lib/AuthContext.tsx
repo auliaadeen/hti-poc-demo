@@ -2,11 +2,13 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-export type Role = "Admin" | "Viewer";
+export type Role = "Admin" | "Viewer" | "Karyawan";
 
 type AuthContextValue = {
   role: Role | null;
   setRole: (role: Role | null) => void;
+  employeeId: string | null;
+  setEmployeeId: (id: string | null) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -15,7 +17,12 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 // bukan sesi autentikasi sungguhan. Reset begitu halaman di-reload penuh.
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role | null>(null);
-  return <AuthContext.Provider value={{ role, setRole }}>{children}</AuthContext.Provider>;
+  const [employeeId, setEmployeeId] = useState<string | null>(null);
+  return (
+    <AuthContext.Provider value={{ role, setRole, employeeId, setEmployeeId }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

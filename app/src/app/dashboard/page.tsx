@@ -132,13 +132,14 @@ export default function DashboardPage() {
               >
                 <ResponsiveContainer width="100%" height={260}>
                   <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-neutral-200 dark:text-neutral-800" vertical={false} />
                     <XAxis dataKey="hari" stroke="#8a8a8a" fontSize={12} />
                     <YAxis stroke="#8a8a8a" fontSize={12} />
                     <Tooltip
                       contentStyle={{
-                        background: "#1a1a1a",
-                        border: "1px solid #333",
+                        background: "var(--tooltip-bg)",
+                        color: "var(--tooltip-fg)",
+                        border: "1px solid var(--tooltip-border)",
                         borderRadius: 8,
                         fontSize: 12,
                       }}

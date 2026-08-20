@@ -57,9 +57,11 @@ export function KpiCard({
 export function Badge({
   children,
   tone = "neutral",
+  className,
 }: {
   children: ReactNode;
   tone?: "neutral" | "success" | "warning" | "danger";
+  className?: string;
 }) {
   const tones = {
     neutral: "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300",
@@ -68,7 +70,7 @@ export function Badge({
     danger: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400",
   };
   return (
-    <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium", tones[tone])}>
+    <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium", tones[tone], className)}>
       {children}
     </span>
   );

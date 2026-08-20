@@ -13,7 +13,7 @@ import { karyawanList, absensiHariIni, pengajuanCutiList, hitungPayroll, formatR
 export default function DashboardPage() {
   const [tampilkanLengkap, setTampilkanLengkap] = useState(false);
   const { role } = useAuth();
-  const isViewer = role === "Viewer";
+  const isAdmin = role === "Admin";
 
   const totalBiayaSDM = karyawanList.reduce((a, k) => a + hitungPayroll(k).gajiBersih, 0);
   const hadirHariIni = absensiHariIni.filter((a) => a.checkIn).length;
@@ -37,7 +37,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <AccountBadge />
-            {!isViewer && (
+            {isAdmin && (
               <button
                 onClick={() => setTampilkanLengkap((v) => !v)}
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-white"
@@ -52,7 +52,7 @@ export default function DashboardPage() {
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <KpiCard
             label="Total Biaya SDM (bulan ini)"
-            value={tampilkanLengkap && !isViewer ? formatRupiah(totalBiayaSDM) : maskRupiah(formatRupiah(totalBiayaSDM))}
+            value={tampilkanLengkap && isAdmin ? formatRupiah(totalBiayaSDM) : maskRupiah(formatRupiah(totalBiayaSDM))}
             sub="Estimasi gaji bersih seluruh karyawan"
           />
           <KpiCard label="Hadir Hari Ini" value={`${hadirHariIni} / ${karyawanList.length}`} sub="Berdasarkan absensi online" />

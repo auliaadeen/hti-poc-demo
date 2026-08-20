@@ -2,9 +2,13 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const menu = [
+  { href: "/payroll/ess", title: "Portal ESS", desc: "Self-service karyawan — absen, cuti, slip gaji sendiri" },
+  { href: "/payroll/struktur-organisasi", title: "Struktur Organisasi", desc: "Siapa lapor ke siapa & jenjang approval cuti" },
   { href: "/payroll/absensi", title: "Absensi", desc: "Check-in/out online, auto-flag telat & lembur" },
+  { href: "/payroll/pola-kerja", title: "Pola Kerja / Shift", desc: "Jam kerja dasar tiap pola & siapa masuk shift mana" },
   { href: "/payroll/cuti", title: "Cuti / Izin / Sakit", desc: "Ajukan & pantau approval berjenjang" },
   { href: "/payroll/payroll-run", title: "Payroll Run", desc: "Hitung gaji + BPJS + PPh 21 sekali klik" },
+  { href: "/payroll/rekap", title: "Rekap Payroll", desc: "Riwayat & laporan payroll per periode, exportable" },
   { href: "/payroll/dashboard", title: "Dashboard", desc: "Ringkas biaya SDM untuk HR & Direksi" },
 ];
 

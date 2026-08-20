@@ -7,19 +7,23 @@ import { ShieldAlert, LogIn, LogOut } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth, type Role } from "@/lib/AuthContext";
+import { karyawanList } from "@/lib/payrollData";
 
 export default function LoginPage() {
-  const { role, setRole } = useAuth();
+  const { role, employeeId, setRole, setEmployeeId } = useAuth();
   const [selected, setSelected] = useState<Role>("Admin");
+  const [selectedEmployee, setSelectedEmployee] = useState(karyawanList[0].id);
   const router = useRouter();
 
   function masuk() {
     setRole(selected);
-    router.push("/");
+    setEmployeeId(selected === "Karyawan" ? selectedEmployee : null);
+    router.push(selected === "Karyawan" ? "/payroll/ess" : "/");
   }
 
   function keluar() {
     setRole(null);
+    setEmployeeId(null);
   }
 
   return (
@@ -46,7 +50,12 @@ export default function LoginPage() {
         <Card className="mt-6">
           {role && (
             <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
-              Sedang masuk sebagai <span className="font-medium text-neutral-900 dark:text-white">{role}</span>.
+              Sedang masuk sebagai{" "}
+              <span className="font-medium text-neutral-900 dark:text-white">
+                {role}
+                {role === "Karyawan" && employeeId && ` — ${karyawanList.find((k) => k.id === employeeId)?.nama}`}
+              </span>
+              .
             </p>
           )}
 
@@ -58,10 +67,30 @@ export default function LoginPage() {
           >
             <option value="Admin">Admin</option>
             <option value="Viewer">Viewer</option>
+            <option value="Karyawan">Karyawan (ESS)</option>
           </select>
-          <p className="mt-1.5 text-xs text-neutral-500">
-            Viewer tidak bisa lihat data lengkap payroll atau finalisasi payroll.
-          </p>
+
+          {selected === "Karyawan" ? (
+            <>
+              <label className="mt-3 block text-xs font-medium text-neutral-500">Login sebagai karyawan</label>
+              <select
+                value={selectedEmployee}
+                onChange={(e) => setSelectedEmployee(e.target.value)}
+                className="mt-1.5 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm dark:border-neutral-800 dark:bg-neutral-900"
+              >
+                {karyawanList.map((k) => (
+                  <option key={k.id} value={k.id}>{k.nama} — {k.jabatan}</option>
+                ))}
+              </select>
+              <p className="mt-1.5 text-xs text-neutral-500">
+                Portal ESS: absen, ajukan cuti, unduh slip gaji sendiri.
+              </p>
+            </>
+          ) : (
+            <p className="mt-1.5 text-xs text-neutral-500">
+              Viewer tidak bisa lihat data lengkap payroll atau finalisasi payroll.
+            </p>
+          )}
 
           <button
             onClick={masuk}

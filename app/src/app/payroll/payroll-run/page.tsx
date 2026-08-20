@@ -6,16 +6,30 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { AccountBadge } from "@/components/AccountBadge";
 import { useAuth } from "@/lib/AuthContext";
-import { karyawanList, hitungPayroll, formatRupiah, maskNama, maskRupiah, HasilPayroll } from "@/lib/payrollData";
+import { karyawanList, hitungPayroll, formatRupiah, maskNama, maskRupiah, unduhSlipGajiPDF, HasilPayroll } from "@/lib/payrollData";
 import { Play, CheckCircle2, Download, Loader2, Eye, EyeOff } from "lucide-react";
+
+const PERIODE = "Agustus 2026";
 
 export default function PayrollRunPage() {
   const [stage, setStage] = useState<"idle" | "processing" | "review" | "final">("idle");
   const [hasil, setHasil] = useState<HasilPayroll[]>([]);
   const [tampilkanLengkap, setTampilkanLengkap] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const { role } = useAuth();
-  const isViewer = role === "Viewer";
-  const showFull = tampilkanLengkap && !isViewer;
+  const isAdmin = role === "Admin";
+  const showFull = tampilkanLengkap && isAdmin;
+
+  async function unduhSlip(h: HasilPayroll) {
+    const k = karyawanList.find((x) => x.id === h.karyawanId);
+    if (!k) return;
+    setDownloadingId(h.karyawanId);
+    try {
+      await unduhSlipGajiPDF(h, k, PERIODE, showFull);
+    } finally {
+      setDownloadingId(null);
+    }
+  }
 
   function jalankanPayroll() {
     setStage("processing");
@@ -40,7 +54,7 @@ export default function PayrollRunPage() {
           </div>
           <div className="mt-3 flex shrink-0 items-center gap-2">
             <AccountBadge />
-            {!isViewer && (
+            {isAdmin && (
               <button
                 onClick={() => setTampilkanLengkap((v) => !v)}
                 className="flex items-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-white"
@@ -121,8 +135,17 @@ export default function PayrollRunPage() {
                           </td>
                           {stage === "final" && (
                             <td className="py-2">
-                              <button className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300">
-                                <Download className="h-3.5 w-3.5" /> PDF
+                              <button
+                                onClick={() => unduhSlip(h)}
+                                disabled={downloadingId === h.karyawanId}
+                                className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50"
+                              >
+                                {downloadingId === h.karyawanId ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <Download className="h-3.5 w-3.5" />
+                                )}
+                                PDF
                               </button>
                             </td>
                           )}
@@ -140,7 +163,7 @@ export default function PayrollRunPage() {
                   </table>
                 </div>
 
-                {stage === "review" && !isViewer && (
+                {stage === "review" && isAdmin && (
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setStage("final")}
@@ -149,9 +172,9 @@ export default function PayrollRunPage() {
                     <CheckCircle2 className="h-4 w-4" /> Finalisasi Payroll
                   </motion.button>
                 )}
-                {stage === "review" && isViewer && (
+                {stage === "review" && !isAdmin && (
                   <p className="mt-5 text-xs text-neutral-500">
-                    Peran Viewer tidak bisa memfinalisasi payroll.
+                    Hanya peran Admin yang bisa memfinalisasi payroll.
                   </p>
                 )}
               </Card>

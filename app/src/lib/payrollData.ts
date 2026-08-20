@@ -5,18 +5,97 @@ export type Karyawan = {
   id: string;
   nama: string;
   jabatan: string;
+  departemen: string;
   statusKontrak: "Tetap" | "Kontrak" | "Magang";
   gajiPokok: number;
   tunjanganTetap: number;
   statusPTKP: "TK/0" | "K/0" | "K/1" | "K/2" | "K/3";
+  atasanId?: string; // undefined = lapor langsung ke Direksi
+  polaKerjaId: string;
 };
 
 export const karyawanList: Karyawan[] = [
-  { id: "EMP001", nama: "Deen", jabatan: "IT Technical & Business Analyst", statusKontrak: "Tetap", gajiPokok: 12000000, tunjanganTetap: 1500000, statusPTKP: "TK/0" },
-  { id: "EMP002", nama: "Franky Jonly", jabatan: "Business Development", statusKontrak: "Tetap", gajiPokok: 11000000, tunjanganTetap: 1200000, statusPTKP: "K/1" },
-  { id: "EMP003", nama: "Diana Aulia", jabatan: "Sales & Documentation", statusKontrak: "Tetap", gajiPokok: 9000000, tunjanganTetap: 1000000, statusPTKP: "TK/0" },
-  { id: "EMP004", nama: "Kris", jabatan: "Presales Engineer", statusKontrak: "Kontrak", gajiPokok: 9500000, tunjanganTetap: 800000, statusPTKP: "K/0" },
+  { id: "EMP001", nama: "Deen", jabatan: "IT Technical & Business Analyst", departemen: "Teknologi & Operasional", statusKontrak: "Tetap", gajiPokok: 12000000, tunjanganTetap: 1500000, statusPTKP: "TK/0", polaKerjaId: "SHIFT-REG" },
+  { id: "EMP002", nama: "Franky Jonly", jabatan: "Business Development", departemen: "Business Development", statusKontrak: "Tetap", gajiPokok: 11000000, tunjanganTetap: 1200000, statusPTKP: "K/1", polaKerjaId: "SHIFT-REG" },
+  { id: "EMP003", nama: "Diana Aulia", jabatan: "Sales & Documentation", departemen: "Business Development", statusKontrak: "Tetap", gajiPokok: 9000000, tunjanganTetap: 1000000, statusPTKP: "TK/0", atasanId: "EMP002", polaKerjaId: "SHIFT-REG" },
+  { id: "EMP004", nama: "Kris", jabatan: "Presales Engineer", departemen: "Teknologi & Operasional", statusKontrak: "Kontrak", gajiPokok: 9500000, tunjanganTetap: 800000, statusPTKP: "K/0", atasanId: "EMP001", polaKerjaId: "SHIFT-SORE" },
 ];
+
+// --- Pola kerja / shift dasar ---
+
+export type PolaKerja = {
+  id: string;
+  nama: string;
+  jamMasuk: string; // "HH:MM"
+  jamPulang: string; // "HH:MM"
+  hariKerja: string[];
+  toleransiTelatMenit: number;
+};
+
+export const polaKerjaList: PolaKerja[] = [
+  {
+    id: "SHIFT-REG",
+    nama: "Reguler (Kantor)",
+    jamMasuk: "09:00",
+    jamPulang: "18:00",
+    hariKerja: ["Sen", "Sel", "Rab", "Kam", "Jum"],
+    toleransiTelatMenit: 5,
+  },
+  {
+    id: "SHIFT-SORE",
+    nama: "Shift Sore (Presales/Kunjungan Klien)",
+    jamMasuk: "12:00",
+    jamPulang: "20:00",
+    hariKerja: ["Sen", "Sel", "Rab", "Kam", "Jum"],
+    toleransiTelatMenit: 5,
+  },
+];
+
+export function getPolaKerja(k: Karyawan): PolaKerja {
+  return polaKerjaList.find((p) => p.id === k.polaKerjaId) ?? polaKerjaList[0];
+}
+
+function jamKeMenit(jam: string): number {
+  const [h, m] = jam.split(":").map(Number);
+  return h * 60 + m;
+}
+
+// Bandingin jam check-in terhadap pola kerja karyawan → status telat/tepat waktu otomatis.
+export function hitungStatusMasuk(
+  checkIn: string,
+  pola: PolaKerja
+): { status: "Tepat Waktu" | "Telat"; menitTelat?: number } {
+  const selisih = jamKeMenit(checkIn) - jamKeMenit(pola.jamMasuk);
+  if (selisih <= pola.toleransiTelatMenit) return { status: "Tepat Waktu" };
+  return { status: "Telat", menitTelat: selisih };
+}
+
+export function hitungMenitLembur(checkOut: string, pola: PolaKerja): number {
+  const selisih = jamKeMenit(checkOut) - jamKeMenit(pola.jamPulang);
+  return selisih > 0 ? selisih : 0;
+}
+
+// --- Struktur organisasi & jenjang approval ---
+// Deen merangkap role Admin/HR (lihat PRD) — approval final "HR" dilakukan lewat peran Admin,
+// bukan orang lain, sesuai skala tim internal saat ini.
+
+export function getAtasan(k: Karyawan): Karyawan | null {
+  if (!k.atasanId) return null;
+  return karyawanList.find((x) => x.id === k.atasanId) ?? null;
+}
+
+export function getBawahan(atasanId: string): Karyawan[] {
+  return karyawanList.filter((x) => x.atasanId === atasanId);
+}
+
+// Jenjang approval untuk satu karyawan: [Atasan Langsung? →] HR (Admin) — final.
+export function jenjangApproval(k: Karyawan): { level: string; nama: string }[] {
+  const atasan = getAtasan(k);
+  const jenjang: { level: string; nama: string }[] = [];
+  if (atasan) jenjang.push({ level: "Atasan Langsung", nama: atasan.nama });
+  jenjang.push({ level: "HR (final)", nama: "Admin" });
+  return jenjang;
+}
 
 export type AbsensiHariIni = {
   karyawanId: string;
@@ -136,6 +215,77 @@ export function formatRupiah(n: number): string {
   return "Rp " + n.toLocaleString("id-ID");
 }
 
+// --- Riwayat payroll (mock, untuk rekap/laporan per periode) ---
+
+export type RekapPeriode = {
+  periode: string;
+  status: "Difinalisasi";
+  hasil: HasilPayroll[];
+};
+
+const jamLemburPerPeriode: Record<string, Record<string, number>> = {
+  "Juni 2026": { EMP003: 2 },
+  "Juli 2026": { EMP002: 1, EMP003: 5 },
+  "Agustus 2026": { EMP003: 3 },
+};
+
+export const payrollHistory: RekapPeriode[] = Object.entries(jamLemburPerPeriode).map(
+  ([periode, lemburMap]) => ({
+    periode,
+    status: "Difinalisasi",
+    hasil: karyawanList.map((k) => hitungPayroll(k, lemburMap[k.id] ?? 0)),
+  })
+);
+
+export function totalRekap(hasil: HasilPayroll[]) {
+  return hasil.reduce(
+    (acc, h) => ({
+      bruto: acc.bruto + h.penghasilanBruto,
+      potongan: acc.potongan + h.totalPotonganBPJS + h.pph21,
+      bersih: acc.bersih + h.gajiBersih,
+    }),
+    { bruto: 0, potongan: 0, bersih: 0 }
+  );
+}
+
+export function unduhRekapCSV(periode: string, hasil: HasilPayroll[]): void {
+  const header = [
+    "Nama",
+    "Gaji Pokok",
+    "Tunjangan Tetap",
+    "Lembur",
+    "Penghasilan Bruto",
+    "BPJS Kesehatan",
+    "BPJS JHT",
+    "BPJS JP",
+    "PPh 21",
+    "Gaji Bersih",
+  ];
+  const rows = hasil.map((h) => [
+    h.nama,
+    h.gajiPokok,
+    h.tunjanganTetap,
+    h.lembur,
+    h.penghasilanBruto,
+    h.bpjsKesehatan,
+    h.bpjsJHT,
+    h.bpjsJP,
+    h.pph21,
+    h.gajiBersih,
+  ]);
+  const csv = [header, ...rows]
+    .map((r) => r.map((v) => (typeof v === "string" && v.includes(",") ? `"${v}"` : v)).join(","))
+    .join("\n");
+
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `rekap-payroll-${periode.toLowerCase().replace(/\s+/g, "-")}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // --- Masking untuk mode demo "Tampilkan Data Lengkap" OFF ---
 // Bukan access control sungguhan — cuma sensor tampilan di sisi client.
 
@@ -170,4 +320,89 @@ export function maskRupiah(formatted: string): string {
     }
   }
   return out;
+}
+
+// --- Slip gaji PDF ---
+
+export async function unduhSlipGajiPDF(
+  h: HasilPayroll,
+  k: Karyawan,
+  periode: string,
+  showFull: boolean
+): Promise<void> {
+  const { jsPDF } = await import("jspdf");
+  const doc = new jsPDF({ unit: "pt", format: "a5" });
+  const nama = showFull ? h.nama : maskNama(h.nama);
+  const rp = (n: number) => (showFull ? formatRupiah(n) : maskRupiah(formatRupiah(n)));
+
+  let y = 50;
+  const left = 40;
+  const right = 300;
+
+  doc.setFontSize(14).setFont("helvetica", "bold");
+  doc.text("SLIP GAJI", left, y);
+  doc.setFontSize(9).setFont("helvetica", "normal");
+  doc.text("PayrollKita — Internal Payroll Tool [ASUMSI: ganti nama sesuai brand internal]", left, (y += 16));
+
+  y += 20;
+  doc.setFontSize(10);
+  doc.text(`Nama`, left, y);
+  doc.text(`: ${nama}`, left + 70, y);
+  doc.text(`Periode`, right, y);
+  doc.text(`: ${periode}`, right + 70, y);
+  y += 16;
+  doc.text(`Jabatan`, left, y);
+  doc.text(`: ${k.jabatan}`, left + 70, y);
+  doc.text(`ID Karyawan`, right, y);
+  doc.text(`: ${h.karyawanId}`, right + 70, y);
+  y += 16;
+  doc.text(`Status`, left, y);
+  doc.text(`: ${k.statusKontrak}`, left + 70, y);
+
+  y += 30;
+  doc.setLineWidth(0.5);
+  doc.line(left, y, 400, y);
+  y += 20;
+
+  const row = (label: string, value: string, bold = false) => {
+    doc.setFont("helvetica", bold ? "bold" : "normal");
+    doc.text(label, left, y);
+    doc.text(value, 400, y, { align: "right" });
+    y += 18;
+  };
+
+  doc.setFontSize(10).setFont("helvetica", "bold");
+  doc.text("Pendapatan", left, y);
+  y += 18;
+  row("Gaji Pokok", rp(h.gajiPokok));
+  row("Tunjangan Tetap", rp(h.tunjanganTetap));
+  row("Lembur", rp(h.lembur));
+  row("Penghasilan Bruto", rp(h.penghasilanBruto), true);
+
+  y += 12;
+  doc.setFont("helvetica", "bold");
+  doc.text("Potongan", left, y);
+  y += 18;
+  row("BPJS Kesehatan", rp(h.bpjsKesehatan));
+  row("BPJS JHT", rp(h.bpjsJHT));
+  row("BPJS JP", rp(h.bpjsJP));
+  row("PPh 21 (TER)", rp(h.pph21));
+  row("Total Potongan", rp(h.totalPotonganBPJS + h.pph21), true);
+
+  y += 12;
+  doc.line(left, y, 400, y);
+  y += 22;
+  doc.setFontSize(12);
+  row("Gaji Bersih Diterima", rp(h.gajiBersih), true);
+
+  y += 30;
+  doc.setFontSize(7).setFont("helvetica", "normal");
+  doc.text(
+    "Perhitungan PPh 21 (skema TER) dan BPJS pada demo ini disederhanakan untuk ilustrasi —",
+    left,
+    y
+  );
+  doc.text("verifikasi ulang ke aturan resmi terbaru sebelum dipakai payroll riil.", left, (y += 10));
+
+  doc.save(`slip-gaji-${h.karyawanId}-${periode.toLowerCase().replace(/\s+/g, "-")}.pdf`);
 }
