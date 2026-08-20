@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   XCircle,
   HelpCircle,
+  Search,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AccountBadge } from "@/components/AccountBadge";
@@ -65,6 +66,12 @@ export default function CommandCenter() {
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("hti:open-command-palette"))}
+              className="flex h-9 items-center gap-1.5 rounded-lg border border-neutral-200 px-3 text-xs font-medium text-neutral-600 transition-colors hover:border-neutral-400 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:text-white"
+            >
+              <Search className="h-3.5 w-3.5" /> Cari <span className="text-neutral-400">Ctrl+K</span>
+            </button>
             <AccountBadge />
             <ThemeToggle />
           </div>

@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/lib/AuthContext";
 import { MiniSlackProvider } from "@/lib/MiniSlackContext";
 import { MiniSlackPanel } from "@/components/MiniSlackPanel";
+import { CommandPalette } from "@/components/CommandPalette";
 import { PwaRegister } from "@/components/PwaRegister";
 import "./globals.css";
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <MiniSlackProvider>
               {children}
               <MiniSlackPanel />
+              <CommandPalette />
             </MiniSlackProvider>
           </AuthProvider>
         </ThemeProvider>
