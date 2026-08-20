@@ -22,6 +22,12 @@ const demos = [
     desc: "Akses dan Monitoring Attendance + Payroll",
     tag: "HRIS Strategic",
   },
+  {
+    href: "/email-setup",
+    title: "Email Setup Dashboard",
+    desc: "Setup email kantor free-tier — Cloudflare + Gmail + Brevo",
+    tag: "Cost Savings",
+  },
 ];
 
 export default function Home() {
