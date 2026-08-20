@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Download, ChevronDown, Eye, EyeOff } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Card";
@@ -28,8 +27,7 @@ export default function RekapPayrollPage() {
       <div className="mx-auto max-w-5xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">&larr; Kembali</Link>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Rekap Payroll</p>
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Rekap Payroll</p>
             <h1 className="mt-1 text-3xl font-bold">Laporan per periode.</h1>
           </div>
           <div className="mt-3 flex shrink-0 items-center gap-2">

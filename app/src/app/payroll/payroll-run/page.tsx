@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { AccountBadge } from "@/components/AccountBadge";
 import { useAuth } from "@/lib/AuthContext";
@@ -55,8 +54,7 @@ export default function PayrollRunPage() {
       <div className="mx-auto max-w-5xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">&larr; Kembali</Link>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Payroll Engine</p>
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Payroll Engine</p>
             <h1 className="mt-1 text-3xl font-bold">Hitung gaji sekali klik.</h1>
           </div>
           <div className="mt-3 flex shrink-0 items-center gap-2">

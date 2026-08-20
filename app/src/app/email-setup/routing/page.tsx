@@ -13,7 +13,6 @@ import {
   FlaskConical,
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useEmailSetup } from "@/lib/EmailSetupContext";
 import { STEP_ORDER, stepIndexFor, type EmailSetupRequest } from "@/lib/emailSetupData";
 
@@ -60,13 +59,7 @@ function RoutingPageInner() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-2xl">
-        <div className="flex items-center justify-between">
-          <Link href="/email-setup" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Routing Email</p>
+        <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Routing Email</p>
         <h1 className="mt-1 text-3xl font-bold">
           {active ? active.targetDomainEmail : "Setup email baru."}
         </h1>

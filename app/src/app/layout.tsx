@@ -6,6 +6,7 @@ import { MiniSlackProvider } from "@/lib/MiniSlackContext";
 import { MiniSlackPanel } from "@/components/MiniSlackPanel";
 import { CommandPalette } from "@/components/CommandPalette";
 import { PwaRegister } from "@/components/PwaRegister";
+import { AppShell } from "@/components/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <AuthProvider>
             <NotificationProvider>
               <MiniSlackProvider>
-                {children}
+                <AppShell>{children}</AppShell>
                 <MiniSlackPanel />
                 <CommandPalette />
               </MiniSlackProvider>

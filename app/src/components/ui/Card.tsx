@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 
 export function Card({
   children,
@@ -11,7 +12,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 p-5 shadow-sm",
+        "rounded-xl border border-white/60 bg-white/60 p-5 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-neutral-900/50",
         className
       )}
     >
@@ -26,18 +27,31 @@ export function KpiCard({
   sub,
   delta,
   deltaPositive = true,
+  icon: Icon,
+  className,
 }: {
   label: string;
   value: string;
   sub?: string;
   delta?: string;
   deltaPositive?: boolean;
+  icon?: LucideIcon;
+  className?: string;
 }) {
   return (
-    <Card>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400">{label}</p>
+    <Card className={cn("transition-colors hover:border-neutral-300 dark:hover:border-neutral-700", className)}>
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">{label}</p>
+        {Icon && (
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-700/10 text-red-600 dark:text-red-400">
+            <Icon className="h-4 w-4" aria-hidden="true" />
+          </div>
+        )}
+      </div>
       <div className="mt-2 flex items-end gap-2">
-        <span className="text-2xl font-semibold text-neutral-900 dark:text-white">{value}</span>
+        <span className="text-2xl font-semibold tabular-nums text-neutral-900 dark:text-white">
+          {value}
+        </span>
         {delta && (
           <span
             className={cn(

@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { Card, Badge } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { risksList, skor, levelFor, type RiskLevel } from "@/lib/risksData";
 
 const rowToneFor: Record<RiskLevel, string> = {
@@ -19,13 +17,7 @@ export default function RisksPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-red-500">
+        <p className="text-sm font-semibold uppercase tracking-widest text-red-500">
           Risk Register — Proposal Bab 9
         </p>
         <h1 className="mt-1 text-3xl font-bold">

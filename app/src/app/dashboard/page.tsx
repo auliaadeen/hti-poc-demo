@@ -14,8 +14,6 @@ import {
 import { Card, KpiCard } from "@/components/ui/Card";
 import { mockWarehouseStock, mockWeeklyTrend } from "@/lib/mockData";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import Link from "next/link";
 
 export default function DashboardPage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<string | null>(null);
@@ -51,12 +49,6 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

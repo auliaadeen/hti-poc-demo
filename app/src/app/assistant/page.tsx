@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, Send, Loader2, Bot, User } from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useMiniSlack } from "@/lib/MiniSlackContext";
 import { computeDashboardStats } from "@/lib/dashboardStats";
 import { payrollHistory } from "@/lib/payrollData";
@@ -77,13 +75,7 @@ export default function AssistantPage() {
   return (
     <main className="flex h-screen flex-col bg-white px-6 py-6 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 md:px-12">
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col min-h-0">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-blue-500">
+        <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-blue-500">
           <Sparkles className="h-4 w-4" /> AI Assistant
         </p>
         <h1 className="mt-1 text-2xl font-bold">Tanya kondisi semua modul.</h1>

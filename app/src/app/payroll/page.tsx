@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 const menu = [
   { href: "/payroll/ess", title: "Portal ESS", desc: "Self-service karyawan — absen, cuti, slip gaji sendiri" },
@@ -15,7 +14,6 @@ const menu = [
 export default function PayrollHome() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-white dark:bg-neutral-950 px-6 text-neutral-900 dark:text-neutral-100">
-      <ThemeToggle className="absolute right-4 top-4 md:right-6 md:top-6" />
       <div className="mx-auto max-w-2xl text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded bg-blue-700 px-3 py-1.5">
           <span className="text-sm font-bold text-neutral-900 dark:text-white">PayrollKita</span>

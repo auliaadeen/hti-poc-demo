@@ -1,20 +1,12 @@
-import Link from "next/link";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { kpiIndicators } from "@/lib/kpiData";
 
 export default function KpiPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-red-500">
+        <p className="text-sm font-semibold uppercase tracking-widest text-red-500">
           KPI Dashboard — Proposal Bab 10
         </p>
         <h1 className="mt-1 text-3xl font-bold">

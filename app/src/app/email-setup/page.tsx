@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AlertTriangle, Mail, Plus, Settings, LogOut } from "lucide-react";
 import { Card, KpiCard, Badge } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useEmailSetup } from "@/lib/EmailSetupContext";
 import { STEP_ORDER, progressPercent, type EmailSetupStatus } from "@/lib/emailSetupData";
 
@@ -35,12 +34,8 @@ export default function EmailSetupDashboardPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
+        <div className="flex items-center justify-end">
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Link
               href="/email-setup/settings"
               className="flex h-9 items-center gap-1.5 rounded-lg border border-neutral-200 px-3 text-xs font-medium text-neutral-600 hover:border-neutral-400 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:text-white"

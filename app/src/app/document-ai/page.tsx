@@ -3,8 +3,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import Link from "next/link";
 import { UploadCloud, FileText, CheckCircle2, Loader2 } from "lucide-react";
 import { useMiniSlack } from "@/lib/MiniSlackContext";
 
@@ -45,13 +43,7 @@ export default function DocumentAiPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-red-500">
+        <p className="text-sm font-semibold uppercase tracking-widest text-red-500">
           Document AI — Demo
         </p>
         <h1 className="mt-1 text-3xl font-bold">

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { ActivityFeed } from "@/components/ActivityFeed";
 import { AccountBadge } from "@/components/AccountBadge";
 
@@ -36,14 +35,7 @@ export default function MenuPage() {
       <div className="absolute right-4 top-4 flex items-center gap-2 md:right-6 md:top-6">
         <AccountBadge />
         <ActivityFeed />
-        <ThemeToggle />
       </div>
-      <Link
-        href="/"
-        className="absolute left-4 top-4 text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 md:left-6 md:top-6"
-      >
-        &larr; Command Center
-      </Link>
       <div className="mx-auto max-w-3xl text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded bg-red-700 px-3 py-1.5">
           <span className="text-sm font-bold text-neutral-900 dark:text-white">ITS</span>

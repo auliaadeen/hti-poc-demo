@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { CheckCircle2, XCircle, Loader2, KeyRound, Info, Send, SkipForward } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Card";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useNotifications } from "@/lib/NotificationContext";
 import {
   EVENT_LABELS,
@@ -38,13 +36,7 @@ export default function NotificationSettingsPage() {
   return (
     <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">
-            &larr; Kembali
-          </Link>
-          <ThemeToggle />
-        </div>
-        <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Settings</p>
+        <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Settings</p>
         <h1 className="mt-1 text-3xl font-bold">Notification Channels.</h1>
 
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 p-3 text-xs text-neutral-600 dark:text-neutral-400">
