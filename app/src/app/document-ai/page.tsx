@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import { UploadCloud, FileText, CheckCircle2, Loader2 } from "lucide-react";
+import { useMiniSlack } from "@/lib/MiniSlackContext";
 
 type Stage = "idle" | "processing" | "done";
 
@@ -14,6 +15,7 @@ export default function DocumentAiPage() {
   const [fileName, setFileName] = useState<string>("");
   const [result, setResult] = useState<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { post } = useMiniSlack();
 
   async function handleFile(file: File) {
     setFileName(file.name);
@@ -30,6 +32,7 @@ export default function DocumentAiPage() {
       setResult(null);
     } finally {
       setStage("done");
+      post("document-ai", `📄 Dokumen ${file.name} selesai diproses`);
     }
   }
 

@@ -10,6 +10,7 @@ import {
   cobaLagi,
   type EmailSetupRequest,
 } from "@/lib/emailSetupData";
+import { useMiniSlack } from "@/lib/MiniSlackContext";
 
 type Provider = "cloudflare" | "brevo";
 
@@ -48,6 +49,7 @@ export function EmailSetupProvider({ children }: { children: ReactNode }) {
     cloudflare: { saved: false, masked: "" },
     brevo: { saved: false, masked: "" },
   });
+  const { post } = useMiniSlack();
 
   function login(email: string, password: string): boolean {
     if (!email.trim() || !password.trim()) return false;
@@ -74,6 +76,7 @@ export function EmailSetupProvider({ children }: { children: ReactNode }) {
     if (!req) return;
     const updated = await cekStatusVerifikasi(req);
     updateRequest(updated);
+    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`);
   }
 
   async function confirmAlias(id: string) {
@@ -81,6 +84,7 @@ export function EmailSetupProvider({ children }: { children: ReactNode }) {
     if (!req) return;
     const updated = await konfirmasiAliasManual(req);
     updateRequest(updated);
+    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`);
   }
 
   async function retry(id: string) {

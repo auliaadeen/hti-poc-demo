@@ -8,6 +8,7 @@ import { AccountBadge } from "@/components/AccountBadge";
 import { useAuth } from "@/lib/AuthContext";
 import { karyawanList, hitungPayroll, formatRupiah, maskNama, maskRupiah, unduhSlipGajiPDF, HasilPayroll } from "@/lib/payrollData";
 import { Play, CheckCircle2, Download, Loader2, Eye, EyeOff } from "lucide-react";
+import { useMiniSlack } from "@/lib/MiniSlackContext";
 
 const PERIODE = "Agustus 2026";
 
@@ -17,8 +18,14 @@ export default function PayrollRunPage() {
   const [tampilkanLengkap, setTampilkanLengkap] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const { role } = useAuth();
+  const { post } = useMiniSlack();
   const isAdmin = role === "Admin";
   const showFull = tampilkanLengkap && isAdmin;
+
+  function finalisasiPayroll() {
+    setStage("final");
+    post("payroll", `💰 Payroll periode ${PERIODE} difinalisasi — ${hasil.length} slip diterbitkan`);
+  }
 
   async function unduhSlip(h: HasilPayroll) {
     const k = karyawanList.find((x) => x.id === h.karyawanId);
@@ -166,7 +173,7 @@ export default function PayrollRunPage() {
                 {stage === "review" && isAdmin && (
                   <motion.button
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => setStage("final")}
+                    onClick={finalisasiPayroll}
                     className="mt-5 flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-medium text-neutral-900 dark:text-white hover:bg-emerald-600"
                   >
                     <CheckCircle2 className="h-4 w-4" /> Finalisasi Payroll
