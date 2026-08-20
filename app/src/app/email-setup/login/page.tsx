@@ -10,8 +10,8 @@ import { useEmailSetup } from "@/lib/EmailSetupContext";
 
 export default function EmailSetupLoginPage() {
   const { login } = useEmailSetup();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("demo@hti.co.id");
+  const [password, setPassword] = useState("demo123");
   const [error, setError] = useState(false);
   const router = useRouter();
 
@@ -44,7 +44,10 @@ export default function EmailSetupLoginPage() {
 
         <div className="mt-3 flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
-          <p>Mode demo — bukan sistem autentikasi produksi. Isi apa saja, tidak ada validasi sungguhan.</p>
+          <p>
+            Mode demo — bukan sistem autentikasi produksi. Field sudah keisi contoh, langsung klik{" "}
+            <strong>Masuk</strong> — email &amp; password apa saja diterima, tidak ada validasi sungguhan.
+          </p>
         </div>
 
         <Card className="mt-6">

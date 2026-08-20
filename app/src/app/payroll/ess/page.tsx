@@ -12,6 +12,9 @@ import {
   Download,
   Loader2,
   ShieldAlert,
+  Eye,
+  EyeOff,
+  CalendarClock,
 } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Card";
 import { AccountBadge } from "@/components/AccountBadge";
@@ -23,7 +26,9 @@ import {
   payrollHistory,
   unduhSlipGajiPDF,
   formatRupiah,
+  maskRupiah,
   getPolaKerja,
+  getRiwayatAbsensi,
   hitungStatusMasuk,
   hitungMenitLembur,
   type PengajuanCuti,
@@ -32,6 +37,15 @@ import {
 const toneFor = (status: string) =>
   status === "Disetujui" ? "success" : status === "Ditolak" ? "danger" : "warning";
 
+const toneForAbsensi = (status: string) =>
+  status === "Tepat Waktu"
+    ? "success"
+    : status === "Telat"
+    ? "warning"
+    : status === "Belum Absen"
+    ? "danger"
+    : "neutral";
+
 export default function EssPage() {
   const { role, employeeId } = useAuth();
 
@@ -39,7 +53,6 @@ export default function EssPage() {
     return (
       <main className="min-h-screen bg-white dark:bg-neutral-950 px-6 py-10 text-neutral-900 dark:text-neutral-100 md:px-12">
         <div className="mx-auto max-w-md text-center">
-          <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">&larr; Kembali</Link>
           <Card className="mt-8 flex flex-col items-center py-10 text-center">
             <ShieldAlert className="mb-3 h-8 w-8 text-amber-500" />
             <p className="text-sm text-neutral-700 dark:text-neutral-300">
@@ -75,9 +88,11 @@ function EssDashboard({ employeeId }: { employeeId: string }) {
   const [tglSelesai, setTglSelesai] = useState("");
   const [alasan, setAlasan] = useState("");
   const [downloadingPeriode, setDownloadingPeriode] = useState<string | null>(null);
+  const [tampilkanGaji, setTampilkanGaji] = useState(false);
 
   const now = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
   const absensi = absensiHariIni.find((a) => a.karyawanId === employeeId);
+  const riwayatAbsensi = getRiwayatAbsensi(employeeId);
 
   function toggleAbsen() {
     if (!checkedIn) {
@@ -127,8 +142,7 @@ function EssDashboard({ employeeId }: { employeeId: string }) {
       <div className="mx-auto max-w-4xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <Link href="/payroll" className="text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">&larr; Kembali</Link>
-            <p className="mt-3 text-sm font-semibold uppercase tracking-widest text-blue-500">Portal ESS</p>
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">Portal ESS</p>
             <h1 className="mt-1 text-3xl font-bold">Halo, {k.nama}.</h1>
             <p className="mt-1 text-sm text-neutral-500">{k.jabatan} · {k.statusKontrak}</p>
           </div>
@@ -169,6 +183,34 @@ function EssDashboard({ employeeId }: { employeeId: string }) {
               Status kemarin: <Badge tone={toneFor(absensi.status) as never}>{absensi.status}</Badge>
             </p>
           )}
+        </Card>
+
+        {/* Riwayat Absensi */}
+        <h2 className="mt-10 mb-3 flex items-center gap-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          <CalendarClock className="h-4 w-4 text-neutral-500" /> Riwayat Absensi
+        </h2>
+        <Card>
+          <div className="divide-y divide-neutral-100 dark:divide-neutral-900">
+            {riwayatAbsensi.map((r) => (
+              <div key={r.tanggal} className="flex items-center justify-between gap-3 py-3 text-sm">
+                <div>
+                  <p className="font-medium text-neutral-900 dark:text-white">
+                    {new Date(r.tanggal).toLocaleDateString("id-ID", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                    })}
+                  </p>
+                  <p className="text-xs text-neutral-500">
+                    {r.checkIn ? `${r.checkIn} – ${r.checkOut ?? "—"}` : "Tidak absen"}
+                    {r.menitTelat ? ` · telat ${r.menitTelat} menit` : ""}
+                    {r.menitLembur ? ` · lembur ${r.menitLembur} menit` : ""}
+                  </p>
+                </div>
+                <Badge tone={toneForAbsensi(r.status) as never}>{r.status}</Badge>
+              </div>
+            ))}
+          </div>
         </Card>
 
         {/* Cuti */}
@@ -260,17 +302,29 @@ function EssDashboard({ employeeId }: { employeeId: string }) {
         </div>
 
         {/* Slip gaji */}
-        <h2 className="mt-10 mb-3 text-sm font-medium text-neutral-700 dark:text-neutral-300">Slip Gaji</h2>
-        <Card>
+        <div className="mt-10 flex items-center justify-between">
+          <h2 className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Slip Gaji</h2>
+          <button
+            onClick={() => setTampilkanGaji((v) => !v)}
+            className="flex items-center gap-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:border-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+          >
+            {tampilkanGaji ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+            {tampilkanGaji ? "Sembunyikan Nominal" : "Tampilkan Nominal"}
+          </button>
+        </div>
+        <Card className="mt-3">
           <div className="divide-y divide-neutral-100 dark:divide-neutral-900">
             {payrollHistory.map((r) => {
               const hasil = r.hasil.find((h) => h.karyawanId === employeeId);
               if (!hasil) return null;
+              const gajiBersih = formatRupiah(hasil.gajiBersih);
               return (
                 <div key={r.periode} className="flex items-center justify-between py-3">
                   <div>
                     <p className="text-sm font-medium text-neutral-900 dark:text-white">{r.periode}</p>
-                    <p className="text-xs text-neutral-500">Gaji bersih: {formatRupiah(hasil.gajiBersih)}</p>
+                    <p className="text-xs text-neutral-500 tabular-nums">
+                      Gaji bersih: {tampilkanGaji ? gajiBersih : maskRupiah(gajiBersih)}
+                    </p>
                   </div>
                   <button
                     onClick={() => unduhSlip(r.periode)}

@@ -113,6 +113,49 @@ export const absensiHariIni: AbsensiHariIni[] = [
   { karyawanId: "EMP004", checkIn: null, checkOut: null, status: "Belum Absen" },
 ];
 
+export type RiwayatAbsensi = {
+  karyawanId: string;
+  tanggal: string; // "YYYY-MM-DD"
+  checkIn: string | null;
+  checkOut: string | null;
+  status: AbsensiHariIni["status"];
+  menitTelat?: number;
+  menitLembur?: number;
+};
+
+// 5 hari kerja terakhir per karyawan, buat riwayat absensi di Portal ESS — data contoh (mock).
+export const riwayatAbsensiList: RiwayatAbsensi[] = [
+  { karyawanId: "EMP001", tanggal: "2026-08-19", checkIn: "08:55", checkOut: "18:05", status: "Tepat Waktu" },
+  { karyawanId: "EMP001", tanggal: "2026-08-18", checkIn: "08:58", checkOut: "18:02", status: "Tepat Waktu" },
+  { karyawanId: "EMP001", tanggal: "2026-08-17", checkIn: "09:12", checkOut: "18:00", status: "Telat", menitTelat: 12 },
+  { karyawanId: "EMP001", tanggal: "2026-08-14", checkIn: "08:50", checkOut: "19:30", status: "Lembur", menitLembur: 90 },
+  { karyawanId: "EMP001", tanggal: "2026-08-13", checkIn: null, checkOut: null, status: "Belum Absen" },
+
+  { karyawanId: "EMP002", tanggal: "2026-08-19", checkIn: "09:10", checkOut: "18:00", status: "Telat", menitTelat: 10 },
+  { karyawanId: "EMP002", tanggal: "2026-08-18", checkIn: "08:59", checkOut: "18:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP002", tanggal: "2026-08-17", checkIn: "08:57", checkOut: "18:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP002", tanggal: "2026-08-14", checkIn: "09:05", checkOut: "18:00", status: "Telat", menitTelat: 5 },
+  { karyawanId: "EMP002", tanggal: "2026-08-13", checkIn: "08:52", checkOut: "18:00", status: "Tepat Waktu" },
+
+  { karyawanId: "EMP003", tanggal: "2026-08-19", checkIn: "08:50", checkOut: "18:40", status: "Lembur", menitLembur: 40 },
+  { karyawanId: "EMP003", tanggal: "2026-08-18", checkIn: "08:55", checkOut: "18:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP003", tanggal: "2026-08-17", checkIn: "08:53", checkOut: "18:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP003", tanggal: "2026-08-14", checkIn: "08:58", checkOut: "18:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP003", tanggal: "2026-08-13", checkIn: "09:20", checkOut: "18:00", status: "Telat", menitTelat: 20 },
+
+  { karyawanId: "EMP004", tanggal: "2026-08-19", checkIn: null, checkOut: null, status: "Belum Absen" },
+  { karyawanId: "EMP004", tanggal: "2026-08-18", checkIn: "11:58", checkOut: "20:00", status: "Tepat Waktu" },
+  { karyawanId: "EMP004", tanggal: "2026-08-17", checkIn: "12:12", checkOut: "20:00", status: "Telat", menitTelat: 12 },
+  { karyawanId: "EMP004", tanggal: "2026-08-14", checkIn: "11:50", checkOut: "20:45", status: "Lembur", menitLembur: 45 },
+  { karyawanId: "EMP004", tanggal: "2026-08-13", checkIn: "11:55", checkOut: "20:00", status: "Tepat Waktu" },
+];
+
+export function getRiwayatAbsensi(karyawanId: string): RiwayatAbsensi[] {
+  return riwayatAbsensiList
+    .filter((r) => r.karyawanId === karyawanId)
+    .sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1));
+}
+
 export type PengajuanCuti = {
   id: string;
   karyawanId: string;
