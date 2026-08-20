@@ -76,7 +76,7 @@ export function EmailSetupProvider({ children }: { children: ReactNode }) {
     if (!req) return;
     const updated = await cekStatusVerifikasi(req);
     updateRequest(updated);
-    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`);
+    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`, "email_setup.status_changed");
   }
 
   async function confirmAlias(id: string) {
@@ -84,7 +84,7 @@ export function EmailSetupProvider({ children }: { children: ReactNode }) {
     if (!req) return;
     const updated = await konfirmasiAliasManual(req);
     updateRequest(updated);
-    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`);
+    post("email-setup", `✉️ Request ${updated.targetDomainEmail} naik status ke ${updated.status}`, "email_setup.status_changed");
   }
 
   async function retry(id: string) {

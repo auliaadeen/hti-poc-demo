@@ -36,6 +36,7 @@ const HALAMAN = [
   { label: "Risk Register", href: "/risks" },
   { label: "Mini Slack", href: "/chat" },
   { label: "AI Assistant", href: "/assistant" },
+  { label: "Notification Channels", href: "/settings/notifications" },
   { label: "Menu Klasik", href: "/menu" },
 ];
 

@@ -24,7 +24,7 @@ export default function PayrollRunPage() {
 
   function finalisasiPayroll() {
     setStage("final");
-    post("payroll", `💰 Payroll periode ${PERIODE} difinalisasi — ${hasil.length} slip diterbitkan`);
+    post("payroll", `💰 Payroll periode ${PERIODE} difinalisasi — ${hasil.length} slip diterbitkan`, "payroll.finalized");
   }
 
   async function unduhSlip(h: HasilPayroll) {

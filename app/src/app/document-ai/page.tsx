@@ -32,7 +32,7 @@ export default function DocumentAiPage() {
       setResult(null);
     } finally {
       setStage("done");
-      post("document-ai", `📄 Dokumen ${file.name} selesai diproses`);
+      post("document-ai", `📄 Dokumen ${file.name} selesai diproses`, "document.processed");
     }
   }
 
