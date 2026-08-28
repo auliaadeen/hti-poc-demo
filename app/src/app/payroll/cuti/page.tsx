@@ -9,7 +9,7 @@ import { FileText, Upload } from "lucide-react";
 export default function CutiPage() {
   const [submitted, setSubmitted] = useState(false);
 
-  const toneFor = (status: string) =>
+  const toneFor = (status: string): "neutral" | "success" | "warning" | "danger" =>
     status === "Disetujui" ? "success" : status === "Ditolak" ? "danger" : "warning";
 
   return (
@@ -66,7 +66,7 @@ export default function CutiPage() {
                       {c.tanggalMulai} s/d {c.tanggalSelesai} · {c.alasan}
                     </p>
                   </div>
-                  <Badge tone={toneFor(c.status) as any}>{c.status}</Badge>
+                  <Badge tone={toneFor(c.status)}>{c.status}</Badge>
                 </div>
                 <div className="mt-3 border-t border-neutral-200 dark:border-neutral-800 pt-3">
                   {c.riwayat.map((r, i) => (

@@ -10,7 +10,7 @@ export default function AbsensiPage() {
   const [checkedIn, setCheckedIn] = useState(false);
   const now = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
 
-  const toneFor = (status: string) =>
+  const toneFor = (status: string): "neutral" | "success" | "warning" | "danger" =>
     status === "Tepat Waktu" ? "success" : status === "Telat" ? "warning" : status === "Belum Absen" ? "danger" : "neutral";
 
   return (
@@ -57,7 +57,7 @@ export default function AbsensiPage() {
                       {a.menitLembur ? ` · Lembur ${a.menitLembur} menit` : ""}
                     </p>
                   </div>
-                  <Badge tone={toneFor(a.status) as any}>{a.status}</Badge>
+                  <Badge tone={toneFor(a.status)}>{a.status}</Badge>
                 </div>
               );
             })}

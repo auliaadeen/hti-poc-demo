@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { CheckCircle2, XCircle, Loader2, KeyRound, Info } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { useEmailSetup } from "@/lib/EmailSetupContext";

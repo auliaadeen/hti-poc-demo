@@ -10,7 +10,11 @@ export function ThemeToggle({ className }: { className?: string }) {
   // Avoid rendering theme-dependent output until mounted, since the server
   // doesn't know the user's stored/system preference.
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // One-time mount flag for SSR/CSR match, not state synced from an external source.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   return (
     <button

@@ -8,10 +8,16 @@ import { useMiniSlack } from "@/lib/MiniSlackContext";
 
 type Stage = "idle" | "processing" | "done";
 
+type ExtractResult = {
+  source: string;
+  fields: { label: string; value: string }[];
+  lineItems: { sku: string; desc: string; qty: number; unit: string; total: string }[];
+};
+
 export default function DocumentAiPage() {
   const [stage, setStage] = useState<Stage>("idle");
   const [fileName, setFileName] = useState<string>("");
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<ExtractResult | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { post } = useMiniSlack();
 
@@ -151,7 +157,7 @@ export default function DocumentAiPage() {
                 transition={{ delay: 0.1 }}
                 className="space-y-1.5"
               >
-                {result.fields?.map((f: any) => (
+                {result.fields?.map((f) => (
                   <div
                     key={f.label}
                     className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 py-1.5 text-sm"
@@ -186,7 +192,7 @@ export default function DocumentAiPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {result.lineItems.map((li: any) => (
+                    {result.lineItems.map((li) => (
                       <tr key={li.sku} className="border-b border-neutral-100 dark:border-neutral-900">
                         <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.sku}</td>
                         <td className="py-2 pr-4 text-neutral-700 dark:text-neutral-300">{li.desc}</td>
